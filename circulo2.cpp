@@ -1,81 +1,39 @@
-#include <GL/glut.h>
-#include <iostream>
+//Grafico en 2D
+//Uso
+// g++ click1.cpp -o click1 -lglut -lGLU -lGL
+// ./click1
+// Hacer click derecho se grafica un circulo, puede hacer varios
+// circulo con radio de 30
+// con  los direccionales del teclado se puede mover el poligono(trasladarse)
+// con shift(pausa) se puede engrandar el poligono
+// con control(alado del alt gr) se puede disminuir el poligono
+// con alt se puede rotar el poligo en 45 grados
 
+#include <GL/glut.h>
+#include <vector>
+#include <iostream>
+#include <cmath>
 using namespace std;
 int tamano_pantallax=1000;
 int tamano_pantallay=700;
-/*class screenPt
-{
-	private:
-	GLint x, y;
-	public:
-	//Constructor predeterminado: inicializa las coordenadas a (0, 0). 
-	screenPt ( ) {
-	x = y = 0;
-	}
-	void setCoords (GLint xCoordValue, GLint yCoordValue) {
-	x = xCoordValue;
-	y = yCoordValue;
-	}
-	GLint getx ( ) const {
-	return x;
-	}
-	GLint gety ( ) const {
-	return y;
-	}
-	void incrementx ( ) {
-	x++;
-	}
-	void decrementy ( ) {
-	y--;
-	}
-};
+int ro=0;
+int g=0;
+int b=1;
+int desplazamiento=10;
+float escala_me=0.9;///2*0.9=1.8 , no lo pierde todo
+float escala_gra=1.5;///tiene que ser mayor a 1 para aumente y se expanda
 
-void circleMidpoint (GLint xc, GLint yc, GLint radius)
-{
-	screenPt circPt;
-	GLint p = 1 - radius;
-	// Valor inicial para el parámetro de punto medio.
-	circPt.setCoords (0, radius); // Establecer coordenadas para
-	// punto superior del círculo.
-	void circlePlotPoints (GLint, GLint, screenPt);
-	// Dibujar el punto inicial en cada cuadrante del círculo. 
-	circlePlotPoints (xc, yc, circPt);
-	//Calcular el siguiente punto y dibujarlo en cada octante.
-	while (circPt.getx ( ) < circPt.gety ( )) {
-	circPt.incrementx ( );
-	if (p < 0)
-	p += 2 * circPt.getx ( ) + 1;
-	else {
-	circPt.decrementy ( );
-	p += 2 * (circPt.getx ( ) - circPt.gety ( )) + 1;
-	}
-	circlePlotPoints (xc, yc, circPt);
-	}
-}
-
-void circlePlotPoints (GLint xc, GLint yc, screenPt circPt )
-{
-	
-	setPixel (xc + circPt.getx ( ), yc + circPt.gety());
-	setPixel (xc - circPt.getx ( ), yc + circPt.gety());
-	setPixel (xc + circPt.getx ( ), yc - circPt.gety());
-	setPixel (xc - circPt.getx ( ), yc - circPt.gety());
-	setPixel (xc + circPt.gety ( ), yc + circPt.getx());
-	setPixel (xc - circPt.gety ( ), yc + circPt.getx());
-	setPixel (xc + circPt.gety ( ), yc - circPt.getx());
-	setPixel (xc - circPt.gety ( ), yc - circPt.getx());
-	glutPostRedisplay();
-}
-*/
+vector<vector<float>> datos ;
 
 void setPixel (float xCoord, float yCoord)
 {
 	glBegin (GL_POINTS);
-	int r,g,b;
-	r=g=0;
-	b=1;
-    glColor3f(r,g,b);
+	
+	vector<float> punto;
+	punto.push_back(xCoord);
+	punto.push_back(yCoord);
+	datos.push_back(punto);
+    glColor3f(ro,g,b);
 	glVertex2f (xCoord, yCoord);
 	glEnd ( );
 }
@@ -93,16 +51,24 @@ void circlePlotPoints (float x, float y, float tx, float ty)
 	glutPostRedisplay();
 }
 
+void plot_circle(){
+	int tamano=datos.size();
+	for(int i=0;i<tamano;i++)
+    {
+    	glBegin(GL_POINTS);
+     	glColor3f(ro,g,b);
+		glVertex2f (datos[i][0],datos[i][1]);
+		glEnd ( );
+    }
+}
 void circleMidpoint2(float x, float y,int r){
 	float d,tempx,tempy;
 	tempx=0;
 	tempy=r;
 	d=5/4-r;
-	glBegin(GL_POINTS);
 	int ro,g,b;
 	ro=1;g=0;
 	b=0;
-
 	circlePlotPoints(x,y,tempx,tempy);
 	while (tempy>tempx){
 		if(d<0){
@@ -120,6 +86,26 @@ void circleMidpoint2(float x, float y,int r){
 }
 
 
+void eclipseMidpoint(float x, float y){
+	float d,d2,tempx,tempy;
+	tempx=0;
+	tempy=y;
+	d=y*y - x*x*y + x*x/4.0;
+	setPixel(tempx,tempy);
+	while (x*x*(tempy-0.5)>y*y*(tempx+1)){
+		if(d<0){
+			d=d+y*y*(2*tempx+3);
+			tempx++;
+		}
+		else{
+			d=d+y*y*(2*tempx+3)+x+x*(-2*y+2);
+			tempx++;
+			tempy--;
+		}
+		setPixel(tempx,tempy);
+	}
+	glEnd ( );
+}
 
 void display()
 {  
@@ -129,7 +115,7 @@ void display()
     
     gluOrtho2D(0.0, tamano_pantallax, 0.0, tamano_pantallay);//sets the parallel(orthographic) projection of the full frame buffer 
     //circleMidpoint(100,100,30);
-    
+    //eclipseMidpoint(100,100);
 
     glFlush();     // flushes the frame buffer to the screen
 }
@@ -143,27 +129,118 @@ void mouse(int button, int state, int mousex, int mousey)
 		int r,g,b;
 		r=g=0;
 		b=1;
-		glBegin (GL_POINTS);
-		glColor3f(r,g,b);
-		glPointSize(10); 
-		glVertex2f(xc,yc);
-		glEnd();
 		circleMidpoint2(xc,yc,30);
     }
     glutPostRedisplay();
 }
+
+void keyboard(int key, int x, int y) {
+  glClearColor(1, 1, 1, 0); //limpia la pantalla
+  glClear(GL_COLOR_BUFFER_BIT);
+  if (key==GLUT_KEY_UP){
+    int tamano=datos.size();
+    for(int i=0;i<tamano;i++)
+    {
+      datos[i][1]+=desplazamiento;
+    }
+    plot_circle();
+  }
+  if (key==GLUT_KEY_DOWN){
+    int tamano=datos.size();
+    for(int i=0;i<tamano;i++)
+    {
+      datos[i][1]-=desplazamiento;
+    }
+    plot_circle();
+  }
+
+  if (key==GLUT_KEY_LEFT){
+    int tamano=datos.size();
+    for(int i=0;i<tamano;i++)
+    {
+      datos[i][0]-=desplazamiento;
+    }
+    plot_circle();
+   }
+
+   if (key==GLUT_KEY_RIGHT){
+    int tamano=datos.size();
+    for(int i=0;i<tamano;i++)
+    {
+      datos[i][0]+=desplazamiento;
+    }
+    plot_circle();
+
+   } 
+
+   if(key==115){//control
+    cout<<"imprimiendo menos debera en el menos"<<endl;
+    int tamano=datos.size();
+    for(int i=0;i<tamano;i++)
+    {
+      datos[i][0]*= escala_me;
+      datos[i][1]*= escala_me;
+    }
+    plot_circle();
+   }
+
+   if(key==113){//pausao shift :v
+    cout<<"imprimiendo más deberas en enl maas"<<endl;
+    int tamano=datos.size();
+    for(int i=0;i<tamano;i++)
+    {
+      datos[i][0]*= escala_gra;
+      datos[i][1]*= escala_gra;
+    }
+	plot_circle();
+    for(int i=0;i<tamano;i++)
+    {
+      cout<<datos[i][0]<<endl;
+      cout<<datos[i][1]<<endl;
+    }
+   }
+
+   if(key==116){
+    //cout<<"engrandiamiento debera??"<<endl;
+    //cout<<"imprimiendo más deberas en enl maas"<<endl;
+    int tamano=datos.size();
+    for(int i=0;i<tamano;i++)
+    {
+      int next=i+1;
+      //float r = sqrt(pow(datos[i][0],2)+pow(datos[i][1],2));
+      //nt t_x=r*cos(45);
+      cout<<"x="<<datos[i][0]<<endl;
+      cout<<"y="<<datos[i][1]<<endl;
+      float tempx=datos[i][0];
+      datos[i][0]=200+(datos[i][0]-200)*sqrt(2)/2 - (datos[i][1]-200)*sqrt(2)/2;
+      datos[i][1]=200+(tempx-200)*sqrt(2)/2 + (datos[i][1]-200)*sqrt(2)/2;
+      cout<<" "<<datos[i][0]<<endl;
+      cout<<" "<<datos[i][1]<<endl;
+    }
+    cout<<"coseno"<<sqrt(2)/2<<endl;
+    cout<<"coseno"<<cos(45)<<endl;
+	plot_circle();
+    for(int i=0;i<tamano;i++)
+    {
+      cout<<"PUNTO"<<endl;
+      
+    }
+   }
+   cout<<"esto seria ENTRA ACAAA"<<key<<endl;
+    glutPostRedisplay();
+}
+
 int main(int argc,char** argv){
 	glutInit(&argc,argv);
-    glutInitWindowSize(tamano_pantallax,tamano_pantallay);   //sets the width and height of the window in pixels
-    glutInitWindowPosition(10,10);//sets the position of the window in pixels from top left corner 
-    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);//creates a single frame buffer of RGB color capacity.
-    glutCreateWindow("Circulo");//creates the window as specified by the user as above.
-    //glutSpecialFunc(keyboard);
-    glClearColor(1, 1, 1, 0); // sets the backgraound color to white light
-    glClear(GL_COLOR_BUFFER_BIT); // clears the frame buffer and set values defined in glClearColor() function call 
+    glutInitWindowSize(tamano_pantallax,tamano_pantallay); 
+    glutInitWindowPosition(10,10);
+    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+    glutCreateWindow("Circulo");
+    glClearColor(1, 1, 1, 0); 
+    glClear(GL_COLOR_BUFFER_BIT);
   	glutMouseFunc(mouse);
-    glutDisplayFunc(display);//links the display event with the display event handler(display)
-    //glutMouseFunc(mouse);//keyboard event handler
+    glutDisplayFunc(display);
+    glutSpecialFunc(keyboard);
     glutMainLoop();//loops the current event
 	return 0;
 }
