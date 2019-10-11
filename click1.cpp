@@ -2,6 +2,7 @@
 //Uso
 // g++ click1.cpp -o click1 -lglut -lGLU -lGL
 // ./click1
+// Hacer click derecho y mantenerlo apretado hasta el punto que se quiere trazar la linea
 // despues se hace click derecho a la pantalla, haciendo los vertices del poligono
 // con click izquierdo se junta los vertices 
 // con  los direccionales del teclado se puede mover el poligono
@@ -17,12 +18,7 @@
 using namespace std;
 int up, down;
 float r,g,b,x,y,x_a,y_a;
-bool check=true;
-int numclick=0;
-bool is_grafica=true;
-int entro=0;
 vector<vector<float>> datos ;
-bool primer_punto= false;
 int desplazamiento=10;
 float escala_me=0.9;///2*0.9=1.8 , no lo pierde todo
 float escala_gra=1.5;///tiene que ser mayor a 1 para aumente y se expanda
@@ -128,7 +124,6 @@ void lineaDDA_dos(int xEnd,int yEnd, int x0, int y0)
   for ( k = 0; k < steps; k++) {
   x += xIncrement;
   y += yIncrement;
-  //setPixel (round (x), round (y));
   glBegin(GL_POINTS);
   glColor3f(r,g,b);
   glVertex2f(x,y);
@@ -152,7 +147,6 @@ void lineaptomedio()
   x1=x_a;
   y1=y_a;
   }
-  
   dx=x2-x1;
   dy=y2-y1;
   d=2*dy-dx;
@@ -211,7 +205,6 @@ void mouse(int button, int state, int mousex, int mousey)
 {
     if(button==GLUT_LEFT_BUTTON && state==GLUT_DOWN)
     {
-       check=true;
         x_a = mousex;
         y_a = tamano_pantallay-mousey;
         vector<float> pares;
@@ -224,7 +217,6 @@ void mouse(int button, int state, int mousex, int mousey)
     }
     if(button==GLUT_LEFT_BUTTON && state==GLUT_UP)
     {
-      check=true;
       x = mousex;
       y = tamano_pantallay-mousey;
       r=1;
@@ -299,7 +291,7 @@ void keyboard(int key, int x, int y) {
     plot_polygon();
    }
 
-   if(key==113){//pausa :v
+   if(key==113){//pausao shift :v
     cout<<"imprimiendo más deberas en enl maas"<<endl;
     int tamano=datos.size();
     for(int i=0;i<tamano;i++)
