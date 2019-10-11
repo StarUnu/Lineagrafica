@@ -5,7 +5,7 @@
 // Hacer click derecho y mantenerlo apretado hasta el punto que se quiere trazar la linea
 // despues se hace click derecho a la pantalla, haciendo los vertices del poligono
 // con click izquierdo se junta los vertices 
-// con  los direccionales del teclado se puede mover el poligono
+// con  los direccionales del teclado se puede mover el poligono(trasladarse)
 // con shift(pausa) se puede engrandar el poligono
 // con control(alado del alt gr) se puede disminuir el poligono
 // con alt se puede rotar el poligo en 45 grados
@@ -30,11 +30,7 @@ void linea()
 {
   glBegin(GL_POINTS);
   glColor3f(1,0,0);
- 
-  cout<<"x antiguo"<<x_a<<endl;
-  cout<<"y antiguo"<<y_a<<endl;
   float dy,dx,m;
-  
   float xd,yd,x1,y1,x2,y2;
   
   if(y_a>=y and x>=x_a){
@@ -65,12 +61,10 @@ void linea()
   dx=x2-x1; 
   m=dy/dx;
   for(xd=x1;xd<=x2;xd++){
-
       yd=(y1+m*(xd-x1));
       glVertex2f(xd,yd);
   }
   glEnd();
-
   glFlush();
 }
 
@@ -222,7 +216,7 @@ void mouse(int button, int state, int mousex, int mousey)
       r=1;
       g=0;
       b=0;
-      //linea();
+      //linea();//metodo incremental
       lineaDDA();
       //punto_medio();
       //lineaptomedio();
@@ -240,7 +234,7 @@ void mouse(int button, int state, int mousex, int mousey)
 void keyboard(int key, int x, int y) {
   glClearColor(1, 1, 1, 0); //limpia la pantalla
   glClear(GL_COLOR_BUFFER_BIT);
-  if (key==GLUT_KEY_UP){
+  if (key==GLUT_KEY_UP){//flecha arriba del teclado,traslación arriba
     up = 1;
     int tamano=datos.size();
     for(int i=0;i<tamano;i++)
@@ -249,7 +243,7 @@ void keyboard(int key, int x, int y) {
     }
     plot_polygon();
   }
-  if (key==GLUT_KEY_DOWN){
+  if (key==GLUT_KEY_DOWN){//flecha arriba del teclado,traslación abajo
     down = 1;
     int tamano=datos.size();
     for(int i=0;i<tamano;i++)
@@ -258,8 +252,7 @@ void keyboard(int key, int x, int y) {
     }
     plot_polygon();
   }
-
-  if (key==GLUT_KEY_LEFT){
+  if (key==GLUT_KEY_LEFT){//flecha arriba del teclado,traslación izquierda
     down = 1;
     int tamano=datos.size();
     for(int i=0;i<tamano;i++)
@@ -268,8 +261,7 @@ void keyboard(int key, int x, int y) {
     }
     plot_polygon();
    }
-
-   if (key==GLUT_KEY_RIGHT){
+   if (key==GLUT_KEY_RIGHT){//flecha arriba del teclado,traslación derecha
     down = 1;
     int tamano=datos.size();
     for(int i=0;i<tamano;i++)
@@ -280,8 +272,7 @@ void keyboard(int key, int x, int y) {
 
    } 
 
-   if(key==115){//control
-    cout<<"imprimiendo menos debera en el menos"<<endl;
+   if(key==115){//tecla control(ctrl), escalamiento negativo
     int tamano=datos.size();
     for(int i=0;i<tamano;i++)
     {
@@ -291,7 +282,7 @@ void keyboard(int key, int x, int y) {
     plot_polygon();
    }
 
-   if(key==113){//pausao shift :v
+   if(key==113){//tecla shift(flecha para arriba), escalamiento positivo
     cout<<"imprimiendo más deberas en enl maas"<<endl;
     int tamano=datos.size();
     for(int i=0;i<tamano;i++)
@@ -308,14 +299,10 @@ void keyboard(int key, int x, int y) {
    }
 
    if(key==116){
-    //cout<<"engrandiamiento debera??"<<endl;
-    //cout<<"imprimiendo más deberas en enl maas"<<endl;
     int tamano=datos.size();
     for(int i=0;i<tamano;i++)
     {
       int next=i+1;
-      //float r = sqrt(pow(datos[i][0],2)+pow(datos[i][1],2));
-      //nt t_x=r*cos(45);
       cout<<"x="<<datos[i][0]<<endl;
       cout<<"y="<<datos[i][1]<<endl;
       float tempx=datos[i][0];
@@ -324,28 +311,19 @@ void keyboard(int key, int x, int y) {
       cout<<" "<<datos[i][0]<<endl;
       cout<<" "<<datos[i][1]<<endl;
     }
-    cout<<"coseno"<<sqrt(2)/2<<endl;
-    cout<<"coseno"<<cos(45)<<endl;
     plot_polygon();
-    for(int i=0;i<tamano;i++)
-    {
-      cout<<"PUNTO"<<endl;
-      
-    }
    }
-   cout<<"esto seria ENTRA ACAAA"<<key<<endl;
     glutPostRedisplay();
 }
 
 
 void display()
 {  
-    glColor3f(r,g,b); // sets the current drawing (foreground) color to blue 
-    glPointSize(4); // sets the size of points to be drawn (in pixels) 
-    glMatrixMode(GL_PROJECTION);// sets the current matrix to projection
-    glLoadIdentity();//multiply the current matrix by identity matrix
-    gluOrtho2D(0.0, tamano_pantallax, 0.0, tamano_pantallay);//sets the parallel(orthographic) projection of the full frame buffer 
-    
+    glColor3f(r,g,b); 
+    glPointSize(4); 
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(0.0, tamano_pantallax, 0.0, tamano_pantallay);
 
     glFlush();     // flushes the frame buffer to the screen
 
