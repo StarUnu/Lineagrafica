@@ -1,14 +1,19 @@
-#include<GL/glut.h> //includes the opengl, glu, and glut header files
-#include<stdlib.h> //includes the standard library header file
+//Grafico en 2D
+//Uso
+// g++ click1.cpp -o click1 -lglut -lGLU -lGL
+// ./click1
+// despues se hace click derecho a la pantalla, haciendo los vertices del poligono
+// con click izquierdo se junta los vertices 
+// con  los direccionales del teclado se puede mover el poligono
+// con shift(pausa) se puede engrandar el poligono
+// con control(alado del alt gr) se puede disminuir el poligono
+// con alt se puede rotar el poligo en 45 grados
+
+#include<GL/glut.h> 
+#include<stdlib.h> 
 #include<iostream>
 #include<vector>
 #include<cmath>
-//http://fernandez-torres-jose.blogspot.com/2012/09/21-transformaciones-bidimensionales.html
-//https://community.khronos.org/t/get-keyboard-input/31724/8
-//http://www.opengl-tutorial.org/beginners-tutorials/tutorial-6-keyboard-and-mouse/
-//https://stackoverflow.com/questions/8629172/how-write-glut-keyboard-functions
-//https://dare2compete.com/bites/everything-you-need-to-know-about-programming-in-python/?fbclid=IwAR3UjGAVVefcBlt_TtfDTcA8xqpS_7RU_qZMeAg8t77FjKlX1d3jcVn4A_U
-//https://www.superprof.es/apuntes/escolar/matematicas/trigonometria/seno-coseno-y-tangente-de-30o-45o-y-60o.html
 using namespace std;
 int up, down;
 float r,g,b,x,y,x_a,y_a;
@@ -23,157 +28,7 @@ float escala_me=0.9;///2*0.9=1.8 , no lo pierde todo
 float escala_gra=1.5;///tiene que ser mayor a 1 para aumente y se expanda
 int tamano_pantallax=1000;//ancho
 int tamano_pantallay=700;//alto
-//parte de una circunferencia
-void MidPointCircle(){
 
-float d;
-/* Valores iniciais */
-int re,g,b;
-
-re=0;g=0;b=1;
-
-glBegin(GL_POINTS);
-glColor3f(re,g,b);
-glVertex2f(x,y);
-glEnd();
-
-int r=10;
-x = x;
-y = y+r;
-
-d = 5/4 - r;
-
-while (y > x){
-  if (d < 0){
-  /* Selecione E */
-  d = d + 2 * x + 3;
-  x++;
-  }else{
-  /* Selecione SE */
-  d = d + 2 * (x - y) + 5;
-  x++;
-  y--;
-  }/*end if*/
-
-  glBegin(GL_POINTS);
-  glColor3f(r,g,b);
-  glVertex2f(x,y);
-  glEnd();
-  cout<<"no entra axa"<<x<<"y="<<y<<endl;
-}/* end while */
-
-}/* end MidpointCircle */
-int fabs(int derivadas){
-  if (derivadas<0){
-    return derivadas*-1;  
-  }
-  return derivadas;
-}
-
-
-void punto_medio(){
-  int x0=x_a;
-  int y0=y_a;
-  int xEnd=x;
-  int yEnd=y;
-  int dx = fabs (xEnd - x0), dy = fabs(yEnd - y0);
-  int p = 2 * dy - dx;
-  int twoDy = 2 * dy, twoDyMinusDx = 2 * (dy - dx);
-  int x, y;
-  /* Determinar qué extremo usar como posición inicial. */
-  if (x0 > xEnd) {
-    x = xEnd;
-    y = yEnd;
-    xEnd = x0;
-  }
-  else {
-    x = x0;
-    y = y0;
-  }
-
-  int r,g,b;
-  r=0;g=0;b=1;
-
-  glBegin(GL_POINTS);
-  glColor3f(r,g,b);
-  glVertex2f(x,y);
-  glEnd();
-
-  while (x < xEnd) {
-    x++;
-    if (p < 0)
-     p += twoDy;
-    else {
-    y++;
-    p += twoDyMinusDx;
-    }
-
-  glBegin(GL_POINTS);
-  glColor3f(r,g,b);
-  glVertex2f(x,y);
-  glEnd();
-  }
-}
-
-
-void lineaDDA()
-{
-  int xEnd=x;
-  int yEnd=y;
-  int x0=x_a;
-  int y0=y_a;
-  int dx = xEnd - x0, dy = yEnd - y0, steps, k;
-  float xIncrement, yIncrement, x = x0, y = y0;
-  if (fabs (dx) > fabs (dy))//pendiente positiva
-    steps = fabs (dx);
-  else
-    steps = fabs (dy);//pendiente negativa
-  xIncrement = float (dx) / float (steps);
-  yIncrement = float (dy) / float (steps);
-  int r,g,b;
-  r=0;g=0;b=1;
-  glBegin(GL_POINTS);
-  glColor3f(r,g,b);
-  glVertex2f(x,y);
-  glEnd();
-  for ( k = 0; k < steps; k++) {
-  x += xIncrement;
-  y += yIncrement;
-  glBegin(GL_POINTS);
-  glColor3f(r,g,b);
-  glVertex2f(x,y);
-  glEnd();
-  }
-}
-
-void lineaDDA_dos(int xEnd,int yEnd, int x0, int y0)
-{
-  int dx = xEnd - x0, dy = yEnd - y0, steps, k;
-  float xIncrement, yIncrement, x = x0, y = y0;
-  if (fabs (dx) > fabs (dy))//pendiente positiva
-    steps = fabs (dx);
-  else
-    steps = fabs (dy);//pendiente negativa
-  xIncrement = float (dx) / float (steps);
-  yIncrement = float (dy) / float (steps);
-  //setPixel (round (x), round (y));
-  int r,g,b;
-  r=0;g=0;b=1;
-  glBegin(GL_POINTS);
-  glColor3f(r,g,b);
-  glVertex2f(x,y);
-  glEnd();
-
-  for ( k = 0; k < steps; k++) {
-  x += xIncrement;
-  y += yIncrement;
-  //setPixel (round (x), round (y));
-  glBegin(GL_POINTS);
-  glColor3f(r,g,b);
-  glVertex2f(x,y);
-  glEnd();
-  }
-}
 //algoritmo incremental
 void linea()
 {
@@ -217,14 +72,70 @@ void linea()
 
       yd=(y1+m*(xd-x1));
       glVertex2f(xd,yd);
-      cout<<"puntos que deberia de graficar x="<< x<<"y="<<y<<endl;
-    }
-
+  }
   glEnd();
-  is_grafica=true;
-  entro=true;
+
   glFlush();
 }
+
+void lineaDDA()
+{
+  int xEnd=x;
+  int yEnd=y;
+  int x0=x_a;
+  int y0=y_a;
+  int dx = xEnd - x0, dy = yEnd - y0, steps, k;
+  float xIncrement, yIncrement, x = x0, y = y0;
+  if (fabs (dx) > fabs (dy))//pendiente positiva
+    steps = fabs (dx);
+  else
+    steps = fabs (dy);//pendiente negativa
+  xIncrement = float (dx) / float (steps);
+  yIncrement = float (dy) / float (steps);
+  int r,g,b;
+  r=0;g=0;b=1;
+  glBegin(GL_POINTS);
+  glColor3f(r,g,b);
+  glVertex2f(x,y);
+  glEnd();
+  for ( k = 0; k < steps; k++) {
+  x += xIncrement;
+  y += yIncrement;
+  glBegin(GL_POINTS);
+  glColor3f(r,g,b);
+  glVertex2f(x,y);
+  glEnd();
+  }
+}
+
+void lineaDDA_dos(int xEnd,int yEnd, int x0, int y0)
+{
+  int dx = xEnd - x0, dy = yEnd - y0, steps, k;
+  float xIncrement, yIncrement, x = x0, y = y0;
+  if (fabs (dx) > fabs (dy))//pendiente positiva
+    steps = fabs (dx);
+  else
+    steps = fabs (dy);//pendiente negativa
+  xIncrement = float (dx) / float (steps);
+  yIncrement = float (dy) / float (steps);
+  int r,g,b;
+  r=0;g=0;b=1;
+  glBegin(GL_POINTS);
+  glColor3f(r,g,b);
+  glVertex2f(x,y);
+  glEnd();
+
+  for ( k = 0; k < steps; k++) {
+  x += xIncrement;
+  y += yIncrement;
+  //setPixel (round (x), round (y));
+  glBegin(GL_POINTS);
+  glColor3f(r,g,b);
+  glVertex2f(x,y);
+  glEnd();
+  }
+}
+
 
 void lineaptomedio()
 {
@@ -235,11 +146,13 @@ void lineaptomedio()
   glEnd();
   glBegin(GL_POINTS);
   glColor3f(0,0,1);
+  if(x_a<x){
   x2=x;
   y2=y;
   x1=x_a;
   y1=y_a;
-
+  }
+  
   dx=x2-x1;
   dy=y2-y1;
   d=2*dy-dx;
@@ -258,18 +171,20 @@ void lineaptomedio()
     }
     glVertex2f(x1,y1);
   }
-
-  while(y1<=y2){
+  //tratando que acepte el otro lado :'o
+ int i=0;
+  while(x2<x1){
     if(d<=0){
       d=d+incE;
-      y1=y1+1;
+      x2=x2-1;
     }
     else{
       d=d+incNE;
-      x1=x1-1;
-      y1=y1+1;
+      x2=x2-1;
+      y2=y2+1;
     }
-    glVertex2f(x1,y1);
+    i+=1;
+    glVertex2f(x2,y2);
   }
   glEnd();
 }
@@ -288,13 +203,8 @@ void plot_polygon(){
       cout<<datos[i][0]<<datos[i][1]<<datos[i+1][0]<<datos[i+1][1]<<endl;
     }
     i+=1;
-    /*if(i==3){
-      break;
-    }*/
   }
-  //cout<<"tamano"<<tamano<<endl;
   lineaDDA_dos(datos[0][0], datos[0][1], datos[tamano-1][0],datos[tamano-1][1]);
-  //cout<<"enta aca debera apreto el boton dereshoooo"<<endl;
 }
 
 void mouse(int button, int state, int mousex, int mousey)
@@ -317,21 +227,14 @@ void mouse(int button, int state, int mousex, int mousey)
       check=true;
       x = mousex;
       y = tamano_pantallay-mousey;
-      //y=mousey;
-      cout<<"coordenadas up x="<<x<<"y="<<y<<endl;
-      r=1;//(rand()%9)/8;
-      g=0;//(rand()%9)/8;
+      r=1;
+      g=0;
       b=0;
-      
       //linea();
       lineaDDA();
       //punto_medio();
       //lineaptomedio();
       //MidPointCircle();
-      /*glBegin(GL_LINES);
-      glVertex3f(0.0f, 0.0f, 0.0f);
-      glVertex3f(50.0f, 50.0f, 50.0f);
-      glEnd();*/
     }
     if(button==GLUT_RIGHT_BUTTON ){
       //graficar los poligonos
@@ -343,7 +246,7 @@ void mouse(int button, int state, int mousex, int mousey)
 
 
 void keyboard(int key, int x, int y) {
-  glClearColor(1, 1, 1, 0); // sets the backgraound color to white light
+  glClearColor(1, 1, 1, 0); //limpia la pantalla
   glClear(GL_COLOR_BUFFER_BIT);
   if (key==GLUT_KEY_UP){
     up = 1;
@@ -372,33 +275,6 @@ void keyboard(int key, int x, int y) {
       datos[i][0]-=desplazamiento;
     }
     plot_polygon();
-    
-    /*
-    vector<float> d1;
-    d1.push_back(50);
-    d1.push_back(20);
-
-    vector<float> d2;
-    d2.push_back(90);
-    d2.push_back(20);
-
-    vector<float> d3;
-    d3.push_back(70);
-    d3.push_back(50);
-
-    
-    datos.push_back(d1);
-    datos.push_back(d2);
-    datos.push_back(d3);
-    //datos.push_back(d4);
-    for(int i=0;i<datos.size();i++)
-    {
-      cout<<"PUNTO"<<endl;
-      cout<<datos[i][0]<<endl;
-      cout<<datos[i][1]<<endl;
-    }
-
-    plot_polygon();*/
    }
 
    if (key==GLUT_KEY_RIGHT){
@@ -465,7 +341,6 @@ void keyboard(int key, int x, int y) {
       
     }
    }
-
    cout<<"esto seria ENTRA ACAAA"<<key<<endl;
     glutPostRedisplay();
 }
@@ -487,17 +362,16 @@ void display()
 
 int main(int argc,char** argv)
 {
+  glutInit(&argc,argv);
+  glutInitWindowSize(tamano_pantallax,tamano_pantallay);
+  glutInitWindowPosition(10,10);
+  glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+  glutCreateWindow("DDA Line Drawing");
+  glClearColor(1, 1, 1, 0); 
+  glClear(GL_COLOR_BUFFER_BIT); //limpia el buffer con los valores glClearColor
 
-	glutInit(&argc,argv);
-    glutInitWindowSize(tamano_pantallax,tamano_pantallay);   //sets the width and height of the window in pixels
-    glutInitWindowPosition(10,10);//sets the position of the window in pixels from top left corner 
-    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);//creates a single frame buffer of RGB color capacity.
-    glutCreateWindow("DDA Line Drawing");//creates the window as specified by the user as above.
-    glutSpecialFunc(keyboard);
-    glClearColor(1, 1, 1, 0); // sets the backgraound color to white light
-    glClear(GL_COLOR_BUFFER_BIT); // clears the frame buffer and set values defined in glClearColor() function call 
-  
-    glutDisplayFunc(display);//links the display event with the display event handler(display)
-    glutMouseFunc(mouse);//keyboard event handler
-    glutMainLoop();//loops the current event
+  glutDisplayFunc(display);//links the display event with the display event handler(display)
+  glutMouseFunc(mouse);//keyboard event handler
+  glutSpecialFunc(keyboard);
+  glutMainLoop();//loops the current event
 }
