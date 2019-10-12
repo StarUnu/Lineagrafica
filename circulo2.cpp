@@ -1,7 +1,7 @@
 //Grafico en 2D
 //Uso
-// g++ click1.cpp -o click1 -lglut -lGLU -lGL
-// ./click1
+// g++ circulo2.cpp -o circulo2 -lglut -lGLU -lGL
+// ./circulo2
 // Hacer click derecho se grafica un circulo, puede hacer varios
 // circulo con radio de 30
 // con  los direccionales del teclado se puede mover el poligono(trasladarse)
@@ -109,7 +109,7 @@ void eclipseMidpoint(float x, float y){
 
 void display()
 {  
-    glPointSize(2); // sets the size of points to be drawn (in pixels) 
+    glPointSize(3); // sets the size of points to be drawn (in pixels) 
     glMatrixMode(GL_PROJECTION);// sets the current matrix to projection
     glLoadIdentity();//multiply the current matrix by identity matrix
     
@@ -137,7 +137,7 @@ void mouse(int button, int state, int mousex, int mousey)
 void keyboard(int key, int x, int y) {
   glClearColor(1, 1, 1, 0); //limpia la pantalla
   glClear(GL_COLOR_BUFFER_BIT);
-  if (key==GLUT_KEY_UP){
+  if (key==GLUT_KEY_UP){//flecha arriba
     int tamano=datos.size();
     for(int i=0;i<tamano;i++)
     {
@@ -145,7 +145,7 @@ void keyboard(int key, int x, int y) {
     }
     plot_circle();
   }
-  if (key==GLUT_KEY_DOWN){
+  if (key==GLUT_KEY_DOWN){//flecha abajo
     int tamano=datos.size();
     for(int i=0;i<tamano;i++)
     {
@@ -154,7 +154,7 @@ void keyboard(int key, int x, int y) {
     plot_circle();
   }
 
-  if (key==GLUT_KEY_LEFT){
+  if (key==GLUT_KEY_LEFT){ //flecha izquierda
     int tamano=datos.size();
     for(int i=0;i<tamano;i++)
     {
@@ -163,7 +163,7 @@ void keyboard(int key, int x, int y) {
     plot_circle();
    }
 
-   if (key==GLUT_KEY_RIGHT){
+   if (key==GLUT_KEY_RIGHT){//flecha derecha
     int tamano=datos.size();
     for(int i=0;i<tamano;i++)
     {
@@ -173,8 +173,7 @@ void keyboard(int key, int x, int y) {
 
    } 
 
-   if(key==115){//control
-    cout<<"imprimiendo menos debera en el menos"<<endl;
+   if(key==115){//control , escalamiento disminuye 
     int tamano=datos.size();
     for(int i=0;i<tamano;i++)
     {
@@ -184,8 +183,7 @@ void keyboard(int key, int x, int y) {
     plot_circle();
    }
 
-   if(key==113){//pausao shift :v
-    cout<<"imprimiendo más deberas en enl maas"<<endl;
+   if(key==113){//pausa shift :v, engranda más
     int tamano=datos.size();
     for(int i=0;i<tamano;i++)
     {
@@ -207,8 +205,6 @@ void keyboard(int key, int x, int y) {
     for(int i=0;i<tamano;i++)
     {
       int next=i+1;
-      //float r = sqrt(pow(datos[i][0],2)+pow(datos[i][1],2));
-      //nt t_x=r*cos(45);
       cout<<"x="<<datos[i][0]<<endl;
       cout<<"y="<<datos[i][1]<<endl;
       float tempx=datos[i][0];
@@ -217,17 +213,9 @@ void keyboard(int key, int x, int y) {
       cout<<" "<<datos[i][0]<<endl;
       cout<<" "<<datos[i][1]<<endl;
     }
-    cout<<"coseno"<<sqrt(2)/2<<endl;
-    cout<<"coseno"<<cos(45)<<endl;
 	plot_circle();
-    for(int i=0;i<tamano;i++)
-    {
-      cout<<"PUNTO"<<endl;
-      
-    }
    }
-   cout<<"esto seria ENTRA ACAAA"<<key<<endl;
-    glutPostRedisplay();
+   glutPostRedisplay();
 }
 
 int main(int argc,char** argv){
@@ -241,6 +229,6 @@ int main(int argc,char** argv){
   	glutMouseFunc(mouse);
     glutDisplayFunc(display);
     glutSpecialFunc(keyboard);
-    glutMainLoop();//loops the current event
+    glutMainLoop();
 	return 0;
 }

@@ -79,10 +79,10 @@ void DrawCube(void)
       glVertex3f(1.0f, -1.0f, 1.0f);
    glEnd();  
    */
-   glBegin(GL_LINES); 
+   /*glBegin(GL_LINES); 
    glVertex3f(0.0f, 0.0f, 0.0f);
    glVertex3f(50.0f, 50.0f, 50.0f);
-   glEnd();
+   glEnd();*/
 
    lineaDDA_dos(0.0f, 0.0f,50.0f, 50.0f,00.0f);
 glFlush();
