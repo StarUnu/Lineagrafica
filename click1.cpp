@@ -15,6 +15,7 @@
 #include<iostream>
 #include<vector>
 #include<cmath>
+#include "PintarPoligono.h"
 using namespace std;
 int up, down;
 float r,g,b,x,y,x_a,y_a;
@@ -272,7 +273,7 @@ void keyboard(int key, int x, int y) {
 
    } 
 
-   if(key==115){//tecla control(ctrl), escalamiento negativo
+   if(key==112){//tecla shift(flecha para arriba), escalamiento negativo
     int tamano=datos.size();
     for(int i=0;i<tamano;i++)
     {
@@ -281,6 +282,12 @@ void keyboard(int key, int x, int y) {
     }
     plot_polygon();
    }
+
+   if(key==115){//tecla control, relleno de poligono
+    PintarPoligono rellenopoligono;
+    rellenopoligono.display_(datos);
+   }
+
 
    if(key==113){//tecla shift(flecha para arriba), escalamiento positivo
     cout<<"imprimiendo más deberas en enl maas"<<endl;
@@ -298,7 +305,7 @@ void keyboard(int key, int x, int y) {
     }
    }
 
-   if(key==116){
+   if(key==116){//rotacion 45 grados
     int tamano=datos.size();
     for(int i=0;i<tamano;i++)
     {
