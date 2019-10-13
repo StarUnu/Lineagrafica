@@ -6,9 +6,10 @@
 // despues se hace click derecho a la pantalla, haciendo los vertices del poligono
 // con click izquierdo se junta los vertices 
 // con  los direccionales del teclado se puede mover el poligono(trasladarse)
-// con shift(pausa) se puede engrandar el poligono
-// con control(alado del alt gr) se puede disminuir el poligono
+// con shift(pausa) se puede engrandar el poligono (escalamiento)
+// con shift(flecha arriba) se puede disminuir el poligono (escalamiento)
 // con alt se puede rotar el poligo en 45 grados
+// con control se puede colorear el poligono 
 
 #include<GL/glut.h> 
 #include<stdlib.h> 
